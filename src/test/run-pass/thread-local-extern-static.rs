@@ -11,18 +11,19 @@
 // ignore-windows
 // aux-build:thread-local-extern-static.rs
 
-#![feature(thread_local)]
-#![feature(cfg_target_thread_local)]
+#![feature(cfg_target_thread_local, thread_local)]
 
 extern crate thread_local_extern_static;
 
+use std::cell::Cell;
+
 extern {
     #[cfg_attr(target_thread_local, thread_local)]
-    static FOO: u32;
+    static FOO: Cell<u32>;
 }
 
 fn main() {
     unsafe {
-        assert_eq!(FOO, 3);
+        assert_eq!(FOO.get(), 3);
     }
 }
